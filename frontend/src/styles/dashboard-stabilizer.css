@@ -1,0 +1,43 @@
+/* Dashboard stabilizing styles to prevent screen vibration */
+
+/* Force GPU acceleration and prevent sub-pixel rendering issues */
+.dashboard-container {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+  will-change: transform;
+  position: relative;
+}
+
+/* Prevent layout shifts by giving content a fixed size */
+.dashboard-content {
+  min-height: 600px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Ensure stable transitions between tabs */
+.dashboard-tab-content {
+  position: relative;
+  height: 100%;
+  overflow: auto;
+  transition: none !important;
+}
+
+/* Prevent animation effects that might cause vibration */
+.MuiTab-root {
+  transition: none !important;
+}
+
+/* Eliminate potential Material-UI animation causes */
+.MuiPaper-root, 
+.MuiButtonBase-root,
+.MuiTabs-indicator {
+  transition: none !important;
+  animation: none !important;
+}
+
+/* Stop any hover effects that might cause vibration */
+*:hover {
+  transition: none !important;
+}

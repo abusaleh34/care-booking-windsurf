@@ -1,0 +1,183 @@
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { ThemeProvider, createTheme } from '@mui/material/styles';
+import { prefixer } from 'stylis';
+import rtlPlugin from 'stylis-plugin-rtl';
+import { CacheProvider } from '@emotion/react';
+import createCache from '@emotion/cache';
+import CssBaseline from '@mui/material/CssBaseline';
+import Layout from './components/layout/Layout';
+import Header from './components/layout/Header';
+import { useTranslation } from 'react-i18next';
+
+// Context Providers
+import { AuthProvider } from './context/AuthContext';
+import { ServiceProvider } from './context/ServiceContext';
+import { BookingProvider } from './context/BookingContext';
+import { ChatProvider } from './context/ChatContext';
+import { FavoritesProvider } from './context/FavoritesContext';
+import { ReviewProvider } from './context/ReviewContext';
+
+// Auth components
+import Login from './components/auth/Login';
+import Register from './components/auth/Register';
+import ForgotPassword from './components/auth/ForgotPassword';
+import ResetPassword from './components/auth/ResetPassword';
+import EmailVerification from './components/auth/EmailVerification';
+import SocialLoginCallback from './components/auth/SocialLoginCallback';
+
+// Dashboard component
+import Dashboard from './components/dashboard/SimpleDashboard';
+
+// Service components
+import ServiceList from './components/services/ServiceList';
+import ServiceDetail from './components/services/ServiceDetail';
+import MyFavorites from './components/services/MyFavorites';
+import MapView from './components/services/MapView';
+
+// Booking components
+import BookingForm from './components/booking/BookingForm';
+import Checkout from './components/booking/Checkout';
+import BookingConfirmation from './components/booking/BookingConfirmation';
+import MyBookings from './components/booking/MyBookings';
+
+// Chat components
+import ChatRoutes from './routes/ChatRoutes';
+import ChatNotification from './components/chat/ChatNotification';
+
+// Placeholder pages that still need to be implemented
+const Home = () => <div>Welcome to Care Booking Platform</div>;
+const Profile = () => <div>User Profile Page</div>;
+const NotFound = () => <div>404 - Page Not Found</div>;
+
+// Create rtl and ltr caches for Arabic support
+const rtlCache = createCache({
+  key: 'muirtl',
+  stylisPlugins: [prefixer, rtlPlugin],
+});
+
+const ltrCache = createCache({
+  key: 'muiltr',
+});
+
+function App() {
+  const { i18n } = useTranslation();
+  const [direction, setDirection] = useState(i18n.language === 'ar' ? 'rtl' : 'ltr');
+  
+  // Update direction when language changes
+  useEffect(() => {
+    const dir = i18n.language === 'ar' ? 'rtl' : 'ltr';
+    setDirection(dir);
+    document.dir = dir;
+  }, [i18n.language]);
+  
+  // Create theme with support for RTL (Arabic) and LTR (English)
+  const theme = createTheme({
+    direction: direction,
+    palette: {
+      primary: {
+        main: '#1976d2',
+      },
+      secondary: {
+        main: '#dc004e',
+      },
+      background: {
+        default: '#f5f5f5',
+      },
+    },
+  });
+
+  return (
+    <AuthProvider>
+      <ServiceProvider>
+        <FavoritesProvider>
+          <BookingProvider>
+            <ChatProvider>
+            <CacheProvider value={direction === 'rtl' ? rtlCache : ltrCache}>
+              <ThemeProvider theme={theme}>
+                <CssBaseline />
+                <ReviewProvider>
+                  <Router>
+                    <Header />
+                    <Layout>
+                      <ChatNotification />
+                    <Routes>
+                      {/* Home route */}
+                      <Route path="/" element={<Home />} />
+                      
+                      {/* Auth routes */}
+                      <Route path="/login" element={<Login />} />
+                      <Route path="/register" element={<Register />} />
+                      <Route path="/forgot-password" element={<ForgotPassword />} />
+                      <Route path="/reset-password" element={<ResetPassword />} />
+                      <Route path="/verify-email" element={<EmailVerification />} />
+                      <Route path="/auth/callback" element={<SocialLoginCallback />} />
+                      <Route path="/profile" element={<Profile />} />
+                      <Route path="/dashboard" element={<Dashboard />} />
+                      
+                      {/* Service routes */}
+                      <Route path="/services" element={<ServiceList />} />
+                      <Route path="/services/:id" element={<ServiceDetail />} />
+                      <Route path="/services/map" element={<MapView />} />
+                      <Route path="/favorites" element={<MyFavorites />} />
+                      
+                      {/* Booking routes */}
+                      <Route path="/booking" element={<ServiceList />} />
+                      <Route path="/booking/:serviceId" element={<BookingForm />} />
+                      <Route path="/checkout/:bookingId" element={<Checkout />} />
+                      <Route path="/bookings/:bookingId/confirmation" element={<BookingConfirmation />} />
+                      <Route path="/bookings/me" element={<MyBookings />} />
+                      
+                      {/* Chat routes */}
+                      <Route path="/chats/*" element={<ChatRoutes />} />
+                      
+                      {/* Review routes */}
+                      <Route path="/reviews/me" element={<MyReviews />} />
+                      
+                      {/* Catch-all route */}
+                      <Route path="*" element={<NotFound />} />
+                    </Routes>
+                    </Layout>
+                  </Router>
+                </ReviewProvider>
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/forgot-password" element={<ForgotPassword />} />
+                    <Route path="/reset-password" element={<ResetPassword />} />
+                    <Route path="/verify-email" element={<EmailVerification />} />
+                    <Route path="/auth/callback" element={<SocialLoginCallback />} />
+                    <Route path="/profile" element={<Profile />} />
+                    <Route path="/dashboard" element={<Dashboard />} />
+                    
+                    {/* Service routes */}
+                    <Route path="/services" element={<ServiceList />} />
+                    <Route path="/services/:id" element={<ServiceDetail />} />
+                    <Route path="/services/map" element={<MapView />} />
+                    <Route path="/favorites" element={<MyFavorites />} />
+                    
+                    {/* Booking routes */}
+                    <Route path="/booking" element={<ServiceList />} />
+                    <Route path="/booking/:serviceId" element={<BookingForm />} />
+                    <Route path="/checkout/:bookingId" element={<Checkout />} />
+                    <Route path="/bookings/:bookingId/confirmation" element={<BookingConfirmation />} />
+                    <Route path="/bookings/me" element={<MyBookings />} />
+                    
+                    {/* Chat routes */}
+                    <Route path="/chats/*" element={<ChatRoutes />} />
+                    
+                    {/* Catch-all route */}
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                  </Layout>
+                </Router>
+              </ThemeProvider>
+            </CacheProvider>
+          </ChatProvider>
+          </BookingProvider>
+        </FavoritesProvider>
+      </ServiceProvider>
+    </AuthProvider>
+  );
+}
+
+export default App;

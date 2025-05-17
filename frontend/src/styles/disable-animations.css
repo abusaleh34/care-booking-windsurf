@@ -1,0 +1,64 @@
+/* Global style overrides to stop all animations and transitions */
+* {
+  animation: none !important;
+  transition: none !important;
+  transform: none !important;
+  animation-duration: 0s !important;
+  animation-delay: 0s !important;
+  transition-duration: 0s !important;
+  transition-delay: 0s !important;
+  transform-style: flat !important;
+  backface-visibility: hidden !important;
+  will-change: auto !important;
+  perspective: none !important;
+}
+
+/* Force browser to use hardware acceleration */
+body, html {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-font-smoothing: subpixel-antialiased;
+}
+
+/* Disable any hover effects */
+*:hover {
+  all: unset !important;
+  transition: none !important;
+  cursor: pointer;
+}
+
+/* Material UI specific overrides */
+.MuiPaper-root,
+.MuiButtonBase-root,
+.MuiTabs-indicator,
+.MuiTab-root,
+.MuiButton-root,
+.MuiCircularProgress-root,
+.MuiDialog-root,
+.MuiTypography-root {
+  transition: none !important;
+  animation: none !important;
+  transform: none !important;
+}
+
+/* Force static positioning for critical elements */
+.dashboard-container, .MuiContainer-root {
+  position: static !important;
+  transform: none !important;
+  transition: none !important;
+}
+
+/* Disable transitions for Material UI Ripple */
+.MuiTouchRipple-root {
+  display: none !important;
+}
+
+/* Disable all scrolling animations */
+html {
+  scroll-behavior: auto !important;
+}
+
+/* Disable any React transition group animations */
+.react-transition-group {
+  transition: none !important;
+}
