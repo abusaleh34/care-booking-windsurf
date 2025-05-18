@@ -3,4 +3,12 @@ const tests = [
   require('./distance.test'),
   require('./payment.test')
 ];
-console.log(`${tests.length} tests executed`);
+
+(async () => {
+  for (const t of tests) {
+    if (t instanceof Promise) {
+      await t;
+    }
+  }
+  console.log(`${tests.length} tests executed`);
+})();

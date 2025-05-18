@@ -1,7 +1,7 @@
 const assert = require('assert');
 const { processPayment } = require('../src/services/paymentService');
 
-(async () => {
+(module.exports = (async () => {
   // card method
   const cardResult = await processPayment({ amount: 50, currency: 'USD', method: 'card', cardInfo: {} });
   assert(cardResult.success);
@@ -15,4 +15,4 @@ const { processPayment } = require('../src/services/paymentService');
   assert(bankResult.success);
 
   console.log('payment tests passed');
-})();
+}))();
