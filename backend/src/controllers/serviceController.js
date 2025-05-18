@@ -1,4 +1,5 @@
 const Service = require('../models/Service');
+const { calculateDistance } = require('../utils/distance');
 
 // Get all services with filtering options
 exports.getServices = async (req, res) => {
@@ -27,6 +28,11 @@ exports.getServices = async (req, res) => {
     if (req.query.day) {
       queryObj['availability.day'] = req.query.day.toLowerCase();
     }
+
+    // Filter by minimum rating
+    if (req.query.minRating) {
+      queryObj['rating.average'] = { $gte: Number(req.query.minRating) };
+    }
     
     // Filter by active status
     queryObj.isActive = true;
@@ -42,11 +48,37 @@ exports.getServices = async (req, res) => {
     const skip = (page - 1) * limit;
     
     // Execute query with pagination
-    const services = await Service.find(queryObj)
+    let services = await Service.find(queryObj)
       .skip(skip)
       .limit(limit)
       .populate('provider', 'name profileImage')
       .sort(req.query.sort || '-createdAt');
+
+    // Calculate distance if coordinates provided
+    if (req.query.lat && req.query.lng) {
+      const userLat = Number(req.query.lat);
+      const userLng = Number(req.query.lng);
+      services = services.map(s => {
+        const obj = s.toObject();
+        if (s.location && s.location.coordinates) {
+          obj.distance = calculateDistance(
+            userLat,
+            userLng,
+            s.location.coordinates.lat,
+            s.location.coordinates.lng
+          );
+        }
+        return obj;
+      });
+
+      if (req.query.sort === 'distance') {
+        services.sort((a, b) => {
+          if (a.distance == null) return 1;
+          if (b.distance == null) return -1;
+          return a.distance - b.distance;
+        });
+      }
+    }
     
     // Get total count for pagination
     const total = await Service.countDocuments(queryObj);
