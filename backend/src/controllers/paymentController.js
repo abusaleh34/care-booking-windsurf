@@ -2,6 +2,7 @@ const Payment = require('../models/Payment');
 const Booking = require('../models/Booking');
 const User = require('../models/User');
 const paymentService = require('../services/paymentService');
+const { getCommissionRate } = require('../config/commission');
 
 // Process payment for a booking
 exports.processPayment = async (req, res) => {
@@ -27,8 +28,8 @@ exports.processPayment = async (req, res) => {
       return res.status(400).json({ message: 'This booking has already been paid for' });
     }
     
-    // Calculate commission (for example, 10% of total price)
-    const commissionRate = 0.1; // 10%
+    // Calculate commission based on service category
+    const commissionRate = getCommissionRate(booking.service.category);
     const commissionAmount = booking.totalPrice * commissionRate;
     const providerAmount = booking.totalPrice - commissionAmount;
     
