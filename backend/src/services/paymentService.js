@@ -4,9 +4,15 @@
  * In a production environment, this would be integrated with a real payment provider like Stripe, PayPal, etc.
  */
 
-// Mock payment process
+// Mock payment process supporting multiple payment methods
 const processPayment = async (paymentData) => {
-  const { amount, currency, cardInfo, customerId } = paymentData;
+  const { amount, currency, method = 'card', cardInfo, customerId } = paymentData;
+
+  // Validate supported payment methods
+  const supported = ['card', 'e_wallet', 'bank_transfer'];
+  if (!supported.includes(method)) {
+    throw new Error('Unsupported payment method');
+  }
   
   // Simulate payment processing delay
   await new Promise(resolve => setTimeout(resolve, 1000));

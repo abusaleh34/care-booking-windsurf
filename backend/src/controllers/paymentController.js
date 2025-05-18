@@ -38,6 +38,7 @@ exports.processPayment = async (req, res) => {
       const paymentResult = await paymentService.processPayment({
         amount: booking.totalPrice,
         currency: 'USD', // Default currency
+        method: paymentMethod || 'card',
         cardInfo,
         customerId: req.user.id
       });
